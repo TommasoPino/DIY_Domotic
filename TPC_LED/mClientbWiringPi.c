@@ -112,12 +112,19 @@ int main(int argc, char *argv[])
           sendData( sockfd, 0 );
           printf("sent\n");
           break;
+        case(-2):
+          printf("sending ...\n");
+          sendData( sockfd, -2 );
+          printf("sent\n");
+          break;
       }
       //printf("getting ...\n");
       //data = getData( sockfd );
       //printf("got\n");
       
       //printf("The LED is (ON/OFF) (1/0): %d\n",data );
+      if (c==-2)
+        break;
     }
 
   }

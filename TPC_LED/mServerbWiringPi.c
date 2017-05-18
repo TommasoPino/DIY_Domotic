@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         printf( "opened new communication with client\n" );
        while(1){
         data = getData( newsockfd );
-        if(data == -2)
+        if(data < 0)
           break;
         printf( "recived #%d\n", data );
 
@@ -130,7 +130,8 @@ int main(int argc, char *argv[]) {
          }
        }
        close( newsockfd );
-       
+       if(data < 0)
+         break;
        }
      return 0; 
 }
