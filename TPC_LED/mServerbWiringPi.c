@@ -123,15 +123,15 @@ int main(int argc, char *argv[]) {
         {
           case(1):
             digitalWrite(0,HIGH);
-            //sendData( newsockfd, data );
+            sendData( newsockfd, data );
             break;
           case(0):
             digitalWrite(0,LOW);
-            //sendData( newsockfd, data );
+            sendData( newsockfd, data );
             break;
          }
        
-       
+       close( newsockfd );
          printf( "opened new communication with client\n" );
        }
      return 0; 
