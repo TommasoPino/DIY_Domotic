@@ -25,6 +25,8 @@ If the server receives -2, it exits.
 #include <errno.h>
 #include <wiringPi.h>
 
+char* errorString;
+
 void error( char *msg ) {
   perror(  msg );
   exit(1);
@@ -40,7 +42,10 @@ void sendData( int sockfd, int x ) {
   char buffer[32];
   sprintf( buffer, "%d\n", x );
   if ( (n = write( sockfd, buffer, strlen(buffer) ) ) < 0 )
-    error( const_cast<char *>( "ERROR writing to socket") );
+  {
+    errorString = "ERROR writing to socket";
+    error( errorString );
+  }
   buffer[n] = '\0';
 }
 
@@ -49,7 +54,10 @@ int getData( int sockfd ) {
   int n;
 
   if ( (n = read(sockfd,buffer,31) ) < 0 )
-    error( const_cast<char *>( "ERROR reading from socket") );
+  {
+    errorString = "ERROR reading from socket";
+    error( errorString );
+  }
   buffer[n] = '\0';
   return atoi( buffer );
 }
@@ -75,15 +83,21 @@ int main(int argc, char *argv[]) {
     
      sockfd = socket(AF_INET, SOCK_STREAM, 0);
      if (sockfd < 0) 
-         error( const_cast<char *>("ERROR opening socket") );
+     {
+       errorString = "ERROR opening socket";
+       error( errorString );
+     }
      bzero((char *) &serv_addr, sizeof(serv_addr));
 
      serv_addr.sin_family = AF_INET;
      serv_addr.sin_addr.s_addr = INADDR_ANY;
      serv_addr.sin_port = htons( portno );
      if (bind(sockfd, (struct sockaddr *) &serv_addr,
-              sizeof(serv_addr)) < 0) 
-       error( const_cast<char *>( "ERROR on binding" ) );
+              sizeof(serv_addr)) < 0)
+     {
+       errorString = "ERROR on binding";
+       error( errorString );
+     }
      listen(sockfd,5);
      clilen = sizeof(cli_addr);
   
@@ -91,13 +105,15 @@ int main(int argc, char *argv[]) {
      while ( 1 ) {
         printf( "waiting for new client...\n" );
         if ( ( newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, (socklen_t*) &clilen) ) < 0 )
-            error( const_cast<char *>("ERROR on accept") );
-        printf( "opened new communication with client\n" );
+        {
+          errorString = "ERROR on accept";
+          error( errorString );
+        }
+       
         data = getData( newsockfd );
        //--- if -2 sent by client, we can quit ---
        if ( data == -2 )
          break;
-       
        if (data == 1)
        {
          digitalWrite(0,HIGH);
@@ -110,7 +126,7 @@ int main(int argc, char *argv[]) {
        }
        
         close( newsockfd );
-       
+       printf( "opened new communication with client\n" );
      }
      return 0; 
 }
