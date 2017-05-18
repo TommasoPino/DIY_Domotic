@@ -1,0 +1,304 @@
+Partendo dalla versione Debian di Raspberry (Raspbian)
+
+*********************************** 1 ***********************************************
+
+Per prima cosa impostiamo il sistema in modo che ci colleghi in automatico alla wifi
+designata (se si collega tramite ethernet si possono saltare questi passaggi)
+**********************************
+$ iw wlan0 scan | grep 'SSID\|freq\|signal\|capability' | tac
+
+nel file /etc/network/interfaces aggiungere:
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet static
+	address 192.168.1.110 # Static IP you want 
+	netmask 255.255.255.0 
+	gateway 192.168.1.1   # IP of your router
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+# iface default inet dhcp
+
+nel file /etc/wpa_supplicant/wpa_supplicant.conf aggiungere
+
+network={
+ssid="FASTWEB-1-WBwtzPg0wI3U"
+psk="46KkrChm2K"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP
+auth_alg=OPEN
+}
+
+
+nel file /etc/dhcp/dhclient.conf aggiungere:
+
+alias {
+interface "wlan0";
+fixed-address 192.168.1.110;
+}
+
+********************************** oppure
+
+# what I did
+# this goes in /etc/dchpcd.conf for static ip assignment 
+interface wlan0
+ static ip_address=192.168.1.110/24
+ static routers=192.168.1.254
+ static domain_name_servers=8.8.8.8
+
+
+in /etc/rc.local
+
+sleep 10
+iwconfig wlan0 power off
+exit 0
+
+*********************************** 2 ***********************************************
+
+E' giunto quindi il momento di estendere le reposity a disposizione modificando il file
+/etc/apt/sources.list
+
+deb http://archive.raspbian.org/raspbian wheezy main contrib non-free
+deb-src http://archive.raspbian.org/raspbian wheezy main contrib non-free
+
+
+*********************************** 3 ***********************************************
+
+Installo le librerie gsl e boost
+
+$ sudo apt-get update
+$ sudo apt-get install libgsl0-dev libgsl0ldbl
+$ sudo apt-get install libboost-all-dev
+
+---------------  test gsl con  ----------------
+
+#include <stdio.h>
+#include <gsl/gsl_sf_gamma.h>
+
+int main (void)
+{
+    double a = 20;
+    double b = 1000;
+    double x = 0.5;
+    double result = gsl_sf_beta_inc(a, b, x);
+    printf("%f\n", result);
+    return 0;
+}
+
+$ gcc GSLtest.c -o GSLtest -lgsl -lgslcblas -lm
+
+-------------  test boost include con ---------
+
+#include<iostream>
+#include<boost/any.hpp>
+
+int main()
+{
+boost::any a(5);
+a = 7.67;
+std::cout<<boost::any_cast<double>(a)<<std::endl;
+}
+
+$ g++ BOOSTincTest.cpp -o BOOSTincTest
+
+------------- test boost library con ----------
+
+#include<iostream>
+#include<boost/filesystem/operations.hpp>
+
+namespace bfs=boost::filesystem;
+int main()
+{
+bfs::path p("BOOSTlibTest.cpp");
+if(bfs::exists(p))
+{
+	std::cout<<p.leaf()<<std::endl;
+}
+}
+
+$ g++ BOOSTlibTest.cpp -o BOOSTlibTest -lboost_filesystem -lboost_system
+
+*********************************** X ***********************************************
+
+installo wiringPi
+$ cd
+$ mkdir Repos
+$ cd Repos/
+$ git clone git://git.drogon.net/wiringPi
+$ cd ~/Repos/wiringPi
+$ ./build
+
+
+#include <wiringPi.h>
+#include <stdio.h>
+int main (void)
+{
+  printf("Start program\n");
+  wiringPiSetup () ;
+  pinMode (0, OUTPUT) ;
+  for (;;)
+  {
+    digitalWrite (0, HIGH) ; delay (500) ;
+    printf("Set pin at HIGH level\n");
+    digitalWrite (0,  LOW) ; delay (500) ;
+    printf("Set pin at LOW level\n");
+  }
+  return 0 ;
+}
+
+$ gcc -o blinkWiringPi blinkWiringPi.c -lwiringPi
+
+*********************************** X ***********************************************
+
+there some problem with the version
+
+teamviewer install
+$ cd
+$ mkdir Downloads; cd Downloads
+$ wget https://download.teamviewer.com/download/linux/teamviewer-host_armhf.deb
+$ sudo dpkg -i teamviewer-host_armhf.deb ; sudo apt-get install -f
+to get ID
+$ teamviewer info 
+$ teamviewer passwd [put permanent passwd]
+$ teamviewer setup
+
+grep -o "ClientID = [0-9]*" /opt/teamviewer/config/global.conf
+*********************************** X ***********************************************
+
+Installo samba
+
+$ sudo apt-get install samba
+$ sudo nano /etc/samba/smb.conf
+
+# set
+workgroup = your_workgroup_name
+wins support = yes
+
+[pihome]
+   comment= Pi Home
+   path=/home/pi
+   browseable=Yes
+   writeable=Yes
+   only guest=no
+   create mask=0777
+   directory mask=0777
+   public=no
+   
+then 
+
+$ smbpasswd -a pi
+$ smbpasswd -n pi
+
+
+*********************************** X ***********************************************
+aumentare la dimensione del font del terminale
+
+$ setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
+*********************************** x ***********************************************
+come impostare plex
+
+sudo apt-get install apt-transport-https
+wget -O - https://dev2day.de/pms/dev2day-pms.gpg.key  | sudo apt-key add -  
+echo "deb https://dev2day.de/pms/ jessie main" | sudo nano /etc/apt/sources.list.d/pms.list
+sudo apt-get install plexmediaserver 
+*********************************** x ***********************************************
+come impostare trasmission
+
+{a6a41f00ee8d23b75dce51348b00e716545b9559XT7t/oa8
+
+$ sudo apt-get update
+$ sudo apt-get install transmission-daemon
+$ sudo nano /etc/transmission-daemon/settings.json
+
+ "rpc-enabled": false -> true
+ "rpc-whitelist-enabled": true -> false
+ 
+*********************************** x ***********************************************
+come montare un hd esterno
+
+$ sudo mkdir /mnt/usbstorage
+
+$ sudo chown -R pi:pi /mnt/usbstorage
+$ sudo chmod -R 775 /mnt/usbstorage
+
+$ sudo setfacl -Rdm g:pi:rwx /mnt/usbstorage
+$ sudo setfacl -Rm g:pi:rwx /mnt/usbstorage
+
+if disk is ntfs
+$ sudo apt-get install ntfs-3g -y 
+if exfat
+$ sudo apt-get install exfat-utils -y
+
+$ sudo mount -o uid=pi,gid=pi /dev/sda1 /mnt/usbstorage
+$ sudo ls -l /dev/disk/by-uuid/
+get the uuid and ad it on
+$ sudo nano /etc/fstab
+$ sudo nano /etc/transmission-daemon/settings.json
+
+"download-dir": "/var/lib/transmission-daemon/downloads",
+-> "download-dir": "/mnt/usbstorage/downloads",
+
+"incomplete-dir": "/var/lib/transmission-daemon/Downloads",
+-> "incomplete-dir": "/mnt/usbstorage/downloads",
+
+$ sudo service transmission-daemon reload
+
+*********************************** x ***********************************************
+
+to make a program executable without ./
+
+mkdir ~/bin
+PATH=$HOME/bin:$PATH
+
+*************************************************************************************
+
+inizio a provare a ad usare la wiringPi library
+
+*** primo test blink 1 led
+
+mettiamo il pin positivo sull 0 (zero), il pin 11 Physical
+il pin negativo sul physical 6
+
+ricordarsi di usare una resistenza per evitare che il led si rovini
+
+blink.c creato prima
+
+*** secondo test button pressed
+
+#include <wiringPi.h>
+#include <stdio.h>
+int main (void)
+{
+  int pressed;
+  int valueNew, valueOld;
+  valueNew = 0;
+  valueOld = 0;
+  pressed = 0;
+  printf("Start program\n");
+  wiringPiSetup () ;
+  pinMode (0, OUTPUT) ;
+  pinMode (1, INPUT ) ;
+  for (;;)
+  {
+    valueNew = digitalRead(1);
+    delay(50);
+    if(valueNew != valueOld)
+    {
+      digitalWrite(0,valueNew);
+      valueOld = valueNew;
+    }
+  }
+  return 0 ;
+}
+
+*** terzo test
+
+
+*************************************************************************************
+
+run a program in background
+aggiungere & alla fine del nome del file
+./my_executable&
+
+
+
