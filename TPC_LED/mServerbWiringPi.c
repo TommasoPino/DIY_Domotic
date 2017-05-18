@@ -112,20 +112,20 @@ int main(int argc, char *argv[]) {
        
         data = getData( newsockfd );
        //--- if -2 sent by client, we can quit ---
-       if ( data == -2 )
+       switch(data)
+       {
+         case(1):
+           digitalWrite(0,HIGH);
+           sendData( newsockfd, data );
+           break;
+         case(0):
+           digitalWrite(0,LOW);
+           sendData( newsockfd, data );
+           break;
+       }
+       close( newsockfd );
+       if(data == -2)
          break;
-       if (data == 1)
-       {
-         digitalWrite(0,HIGH);
-         sendData( newsockfd, data );
-       }
-       else
-       {
-         digitalWrite(0,LOW);
-         sendData( newsockfd, data );
-       }
-       
-        close( newsockfd );
        printf( "opened new communication with client\n" );
      }
      return 0; 

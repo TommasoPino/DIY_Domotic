@@ -58,7 +58,7 @@ int getData( int sockfd ) {
 int main(int argc, char *argv[])
 {
   int sockfd, portno = 51717, n;
-  char serverIp[] = "192.168.1.101";
+  char serverIp[] = "192.168.1.110";
   struct sockaddr_in serv_addr;
   struct hostent *server;
   char buffer[256];
@@ -93,35 +93,43 @@ int main(int argc, char *argv[])
     error( errorString );
   }
   
-  for ( ;; ) {
+  while(1) {
     
     printf( "turn on the LED? yes/no 1/0\n");
-    c = fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d", &c);
-    if (c == 1)
+    if(fgets(line, sizeof(line), stdin)!=NULL)
     {
-      sendData( sockfd, 1 );
+      sscanf(line, "%d", &c);
+      if (c == 1)
+      {
+        sendData( sockfd, 1 );
+      }
+      else if (c == 0)
+      {
+        sendData( sockfd, 0 );
+        break;
+      }
+      c = 2;
+      data = getData( sockfd );
+      
+      printf("The LED is (ON/OFF) (1/0): %d\n",data );
     }
-    else
-    {
-      sendData( sockfd, 0 );
-    }
-
-    data = getData( sockfd );
-    
-    printf("The LED is (ON/OFF) (1/0): %d\n",data );
+    /*
     
     printf( "stop server? yes/no 1/0\n");
-    c = fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d", &c);
-    if (c == 1)
+    if(fgets(line, sizeof(line), stdin)!=NULL)
     {
-      sendData( sockfd, -2 );
+      sscanf(line, "%d", &c);
+      if (c == 1)
+      {
+        sendData( sockfd, -2 );
+        break;
+      }
+      else
+      {
+        sendData( sockfd, -1 );
+      }
     }
-    else
-    {
-      sendData( sockfd, -1 );
-    }
+     */
 
   }
   
