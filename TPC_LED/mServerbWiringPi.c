@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
         data = getData( newsockfd );
         if(data < 0)
           break;
-        printf( "recived #%d\n", data );
+        //printf( "recived #%d\n", data );
 
         //--- if -2 sent by client, we can quit ---
         switch(data)
