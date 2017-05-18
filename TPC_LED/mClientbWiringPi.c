@@ -106,7 +106,6 @@ int main(int argc, char *argv[])
       else if (c == 0)
       {
         sendData( sockfd, 0 );
-        break;
       }
       c = 2;
       data = getData( sockfd );
