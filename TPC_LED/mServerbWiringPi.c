@@ -112,8 +112,10 @@ int main(int argc, char *argv[]) {
        
         data = getData( newsockfd );
         if(data == -2)
+        {
           close( newsockfd );
-        break;
+          break;
+        }
         printf( "recived #%d\n", data );
 
         //--- if -2 sent by client, we can quit ---
