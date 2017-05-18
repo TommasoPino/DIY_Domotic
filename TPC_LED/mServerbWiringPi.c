@@ -122,18 +122,18 @@ int main(int argc, char *argv[]) {
         {
           case(1):
             digitalWrite(0,HIGH);
-            sendData( newsockfd, data );
+            //sendData( newsockfd, data );
             break;
           case(0):
             digitalWrite(0,LOW);
-            sendData( newsockfd, data );
+            //sendData( newsockfd, data );
             break;
          }
        }
        close( newsockfd );
        if(data == -2)
-         break;
+            break;
        }
     printf( "\nstop server \n" );
-     return 0; 
+    return 0;
 }
