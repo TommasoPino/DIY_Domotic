@@ -93,42 +93,32 @@ int main(int argc, char *argv[])
     error( errorString );
   }
   
-  while(1) {
+  for ( n = 0; n < 10; n++ ) {
     
     printf( "turn on the LED? yes/no 1/0\n");
     if(fgets(line, sizeof(line), stdin)!=NULL)
     {
       sscanf(line, "%d", &c);
-      if (c == 1)
+      printf("%d\n",c );
+      switch(c)
       {
-        sendData( sockfd, 1 );
+        case(1):
+          printf("sending ...\n");
+          sendData( sockfd, 1 );
+          printf("sent\n");
+          break;
+        case(0):
+          printf("sending ...\n");
+          sendData( sockfd, 0 );
+          printf("sent\n");
+          break;
       }
-      else if (c == 0)
-      {
-        sendData( sockfd, 0 );
-      }
-      c = 2;
-      data = getData( sockfd );
+      //printf("getting ...\n");
+      //data = getData( sockfd );
+      //printf("got\n");
       
-      printf("The LED is (ON/OFF) (1/0): %d\n",data );
+      //printf("The LED is (ON/OFF) (1/0): %d\n",data );
     }
-    /*
-    
-    printf( "stop server? yes/no 1/0\n");
-    if(fgets(line, sizeof(line), stdin)!=NULL)
-    {
-      sscanf(line, "%d", &c);
-      if (c == 1)
-      {
-        sendData( sockfd, -2 );
-        break;
-      }
-      else
-      {
-        sendData( sockfd, -1 );
-      }
-    }
-     */
 
   }
   
