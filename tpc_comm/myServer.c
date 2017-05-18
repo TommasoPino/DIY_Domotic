@@ -34,13 +34,18 @@ int func( int a ) {
    return 2 * a;
 }
 
+char* errorString;
+
 void sendData( int sockfd, int x ) {
   int n;
 
   char buffer[32];
   sprintf( buffer, "%d\n", x );
   if ( (n = write( sockfd, buffer, strlen(buffer) ) ) < 0 )
-    error( const_cast<char *>( "ERROR writing to socket") );
+  {
+    errorString = "ERROR writing to socket";
+    error( errorString );
+  }
   buffer[n] = '\0';
 }
 
@@ -49,7 +54,10 @@ int getData( int sockfd ) {
   int n;
 
   if ( (n = read(sockfd,buffer,31) ) < 0 )
-    error( const_cast<char *>( "ERROR reading from socket") );
+  {
+    errorString = "ERROR reading from socket";
+    error( errorString );
+  }
   buffer[n] = '\0';
   return atoi( buffer );
 }
@@ -64,16 +72,22 @@ int main(int argc, char *argv[]) {
      printf( "using port #%d\n", portno );
     
      sockfd = socket(AF_INET, SOCK_STREAM, 0);
-     if (sockfd < 0) 
-         error( const_cast<char *>("ERROR opening socket") );
+     if (sockfd < 0)
+     {
+       errorString = "ERROR opening socket";
+       error( errorString );
+     }
      bzero((char *) &serv_addr, sizeof(serv_addr));
 
      serv_addr.sin_family = AF_INET;
      serv_addr.sin_addr.s_addr = INADDR_ANY;
      serv_addr.sin_port = htons( portno );
      if (bind(sockfd, (struct sockaddr *) &serv_addr,
-              sizeof(serv_addr)) < 0) 
-       error( const_cast<char *>( "ERROR on binding" ) );
+              sizeof(serv_addr)) < 0)
+     {
+       errorString =  "ERROR on binding" ;
+       error( errorString );
+     }
      listen(sockfd,5);
      clilen = sizeof(cli_addr);
   
@@ -81,7 +95,10 @@ int main(int argc, char *argv[]) {
      while ( 1 ) {
         printf( "waiting for new client...\n" );
         if ( ( newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, (socklen_t*) &clilen) ) < 0 )
-            error( const_cast<char *>("ERROR on accept") );
+        {
+          errorString = "ERROR on accept";
+          error( errorString );
+        }
         printf( "opened new communication with client\n" );
         while ( 1 ) {
              //---- wait for a number from client ---
