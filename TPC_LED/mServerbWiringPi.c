@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
   valueNew = 0;
   valueOld = 0;
   stsButton = 0;
-    printf( "set up wiringPi\n");
+    //printf( "set up wiringPi\n");
     wiringPiSetup () ;
     pinMode (0, OUTPUT) ;
     pinMode (1, INPUT ) ;
@@ -102,14 +102,15 @@ int main(int argc, char *argv[]) {
      clilen = sizeof(cli_addr);
   
      //--- infinite wait on a connection ---
+    printf( "\nstart server with wiringPi\n" );
      while ( 1 ) {
-        printf( "waiting for new client...\n" );
+        //printf( "waiting for new client...\n" );
         if ( ( newsockfd = accept( sockfd, (struct sockaddr *) &cli_addr, (socklen_t*) &clilen) ) < 0 )
         {
           errorString = "ERROR on accept";
           error( errorString );
         }
-        printf( "opened new communication with client\n" );
+        //printf( "opened new communication with client\n" );
        while(1){
         data = getData( newsockfd );
         if(data < 0)
@@ -133,5 +134,6 @@ int main(int argc, char *argv[]) {
        if(data < 0)
          break;
        }
+    printf( "\nstop server \n" );
      return 0; 
 }
