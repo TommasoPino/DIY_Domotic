@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     error( errorString );
   }
   
-  for ( n = 0; n < 10; n++ ) {
+  while(1) {
     
     printf( "turn on the LED? yes/no 1/0\n");
     if(fgets(line, sizeof(line), stdin)!=NULL)

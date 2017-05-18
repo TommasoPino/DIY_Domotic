@@ -109,13 +109,11 @@ int main(int argc, char *argv[]) {
           errorString = "ERROR on accept";
           error( errorString );
         }
-       
+        printf( "opened new communication with client\n" );
+       while(1){
         data = getData( newsockfd );
         if(data == -2)
-        {
-          close( newsockfd );
           break;
-        }
         printf( "recived #%d\n", data );
 
         //--- if -2 sent by client, we can quit ---
@@ -130,9 +128,9 @@ int main(int argc, char *argv[]) {
             sendData( newsockfd, data );
             break;
          }
-       
+       }
        close( newsockfd );
-         printf( "opened new communication with client\n" );
+       
        }
      return 0; 
 }
