@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
          }
        }
        close( newsockfd );
-       if(data < 0)
+       if(data == -2)
          break;
        }
     printf( "\nstop server \n" );

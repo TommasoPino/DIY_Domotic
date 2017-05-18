@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
       //printf("got\n");
       
       //printf("The LED is (ON/OFF) (1/0): %d\n",data );
-      if (c==-2)
+      if (c<0)
         break;
     }
 
