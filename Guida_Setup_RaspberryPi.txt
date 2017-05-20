@@ -1,4 +1,4 @@
-Partendo dalla versione Debian di Raspberry (Raspbian)
+Partendo dalla versione Debian di Raspberry (Raspbian) lite
 
 *********************************** 1 ***********************************************
 
@@ -6,16 +6,6 @@ Per prima cosa impostiamo il sistema in modo che ci colleghi in automatico alla 
 designata (se si collega tramite ethernet si possono saltare questi passaggi)
 **********************************
 $ iw wlan0 scan | grep 'SSID\|freq\|signal\|capability' | tac
-
-nel file /etc/network/interfaces aggiungere:
-auto wlan0
-allow-hotplug wlan0
-iface wlan0 inet static
-	address 192.168.1.110 # Static IP you want 
-	netmask 255.255.255.0 
-	gateway 192.168.1.1   # IP of your router
-	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-# iface default inet dhcp
 
 nel file /etc/wpa_supplicant/wpa_supplicant.conf aggiungere
 
@@ -28,15 +18,6 @@ pairwise=CCMP
 auth_alg=OPEN
 }
 
-
-nel file /etc/dhcp/dhclient.conf aggiungere:
-
-alias {
-interface "wlan0";
-fixed-address 192.168.1.110;
-}
-
-********************************** oppure
 
 # what I did
 # this goes in /etc/dchpcd.conf for static ip assignment 
@@ -51,6 +32,27 @@ in /etc/rc.local
 sleep 10
 iwconfig wlan0 power off
 exit 0
+
+********************************** oppure
+
+nel file /etc/dhcp/dhclient.conf aggiungere:
+
+alias {
+interface "wlan0";
+fixed-address 192.168.1.110;
+}
+
+nel file /etc/network/interfaces aggiungere:
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet static
+	address 192.168.1.110 # Static IP you want 
+	netmask 255.255.255.0 
+	gateway 192.168.1.1   # IP of your router
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+# iface default inet dhcp
+
+
 
 *********************************** 2 ***********************************************
 
@@ -192,14 +194,14 @@ $ smbpasswd -n pi
 *********************************** X ***********************************************
 aumentare la dimensione del font del terminale
 
-$ setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+$ setfont /usr/share/consolefonts/Lat15-TerminusBold32x16.psf.gz
 
 *********************************** x ***********************************************
 come impostare plex
 
 sudo apt-get install apt-transport-https
 wget -O - https://dev2day.de/pms/dev2day-pms.gpg.key  | sudo apt-key add -  
-echo "deb https://dev2day.de/pms/ jessie main" | sudo nano /etc/apt/sources.list.d/pms.list
+echo "deb https://dev2day.de/pms/ jessie main" | sudo tee /etc/apt/sources.list.d/pms.list
 sudo apt-get install plexmediaserver 
 *********************************** x ***********************************************
 come impostare trasmission
@@ -229,10 +231,12 @@ $ sudo apt-get install ntfs-3g -y
 if exfat
 $ sudo apt-get install exfat-utils -y
 
-$ sudo mount -o uid=pi,gid=pi /dev/sda1 /mnt/usbstorage
+$ sudo mount -o uid=pi,gid=pi /dev/sda1 /mnt/usbstorage 
 $ sudo ls -l /dev/disk/by-uuid/
-get the uuid and ad it on
+get the uuid and ad it on with nofail option
 $ sudo nano /etc/fstab
+
+
 $ sudo nano /etc/transmission-daemon/settings.json
 
 "download-dir": "/var/lib/transmission-daemon/downloads",
