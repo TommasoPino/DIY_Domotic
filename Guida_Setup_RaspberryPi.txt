@@ -235,7 +235,7 @@ $ sudo mount -o uid=pi,gid=pi /dev/sda1 /mnt/usbstorage
 $ sudo ls -l /dev/disk/by-uuid/
 get the uuid and ad it on with nofail option
 $ sudo nano /etc/fstab
-
+UUID=XXXX-XXXX    /mnt/usbstorage    ntfs   nofail,uid=pi,gid=pi    0   0
 
 $ sudo nano /etc/transmission-daemon/settings.json
 
