@@ -21,7 +21,7 @@ quindi facciamo il login dopo l'avvio e iniziamo a settare la WiFi
 
 scansioniamo tutti i segnali e cerchiamo il nostro SSID al quale ci collegheremo con la seguente istruzione
 
-'''
+'''bash
 $ sudo iw wlan0 scan | grep 'SSID' | tac
 '''
 
