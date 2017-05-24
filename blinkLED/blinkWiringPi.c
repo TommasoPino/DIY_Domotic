@@ -5,7 +5,7 @@ int main (void)
   printf("Start program\n");
   wiringPiSetup () ;
   pinMode (0, OUTPUT) ;
-  for (;;)
+  while(1)
   {
     digitalWrite (0, HIGH) ; delay (500) ;
     printf("Set pin at HIGH level\n");

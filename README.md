@@ -1,45 +1,33 @@
 # DIY_Domotic
 
-Questa repository ha lo scopo, al momento, di raccogliere tutto il materiale su cui sto 
-lavorando e che ho usato per costruire la mia Casa Domotica personale in cui ho un server 
-core su una RaspberryPi 3 che monta RaspBian Lite.
+Questa repository ha lo scopo, al momento, di raccogliere tutto il materiale su cui sto lavorando e che ho usato per costruire la mia Casa Domotica personale in cui ho un server core su una RaspberryPi 3 che monta RaspBian Lite.
 
-Ogni sotto cartella contiene il codice usato per un piccolo esperimento, il quale è descritto
-anche per mezzo di immagini per replicare l'hardware.
+Ogni sotto cartella contiene il codice usato per un piccolo esperimento, il quale è descritto anche per mezzo di immagini per replicare l'hardware.
 
-<<<<<<< HEAD
-## 000.Rpi3 Setup WiFi
-=======
 __RaspberryPi SETUP Index__
 
-* [Setup WiFi](https://github.com/TommasoPino/DIY_Domotic#000rpi3-setup-wifi)
+* [Setup WiFi](#setup-wifi)
+* [WiringPi Library](#wiringpi-library)
 
 __Tutorials Index__
-* [LED blinking](https://github.com/TommasoPino/DIY_Domotic#000rpi3-setup-wifi)
+* [LED blinking](#led-blinking)
 
 ## RaspberryPi SETUP
 
 ### Setup WiFi
->>>>>>> f0d8c138ab7c9bff8fb35b262184a76c12424593
 
-Per prima cosa riporto di seguito le istruzioni di ciò che ho fatto per assicurarmi che la
-mia Rasberrina possa essere sempre raggiunta per mezzo di ssh da parte del mio Mac. (se si 
-usa Windows le istruzioni sono le stesse, solo che dovrete usare un software aggiuntivo 
-"PuTTY", www.putty.org)
+Per prima cosa riporto di seguito le istruzioni di ciò che ho fatto per assicurarmi che la mia Rasberrina possa essere sempre raggiunta per mezzo di ssh da parte del mio Mac. (se si usa Windows le istruzioni sono le stesse, solo che dovrete usare un software aggiuntivo "PuTTY", www.putty.org).
 
-Inizziamo ipotizzando di avere seguito le istruzioni per avviare per la prima volta la RaspberryPi
-con Raspbian Lite
+Inizziamo ipotizzando di avere seguito le istruzioni per avviare per la prima volta la RaspberryPi con Raspbian Lite.
 
-quindi facciamo il login dopo l'avvio e iniziamo a settare la WiFi
-
-scansioniamo tutti i segnali e cerchiamo il nostro SSID al quale ci collegheremo con la seguente istruzione
+Quindi facciamo il login dopo l'avvio e iniziamo a settare la WiFi.
+Scansioniamo tutti i segnali e cerchiamo il nostro SSID al quale ci collegheremo con la seguente istruzione
 
 ```
 $ sudo iw wlan0 scan | grep 'SSID' | tac
 ```
 
-Se troviamo la nostra rete possiamo procedere con aggiungerla nelle reti conosciute nel file:
-"/etc/wpa_supplicant/wpa_supplicant.conf"
+Se troviamo la nostra rete possiamo procedere e aggiungerla nelle reti conosciute nel file **/etc/wpa_supplicant/wpa_supplicant.conf**
 
 ```
 $ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
@@ -55,8 +43,7 @@ auth_alg=OPEN
 }
 ```
 
-Per assicurarci che non si cambi ip ad ogni riavvio, aggiungiamo al file: 
-"/etc/dchpcd.conf"
+Per assicurarci che non si cambi indirizzo IP ad ogni riavvio, aggiungiamo al file **/etc/dchpcd.conf** le seguenti istruzioni:
 
 ```
 $ sudo nano /etc/dchpcd.conf 
@@ -67,8 +54,7 @@ interface wlan0
  static domain_name_servers=8.8.8.8
 ```
 
-inoltre per concludere, assicuriamoci che il power managment della RaspberryPi sia disattivato,
-altrimenti dopo 15 minuti circa si perderà la connessione:
+Infine, assicuriamoci che il power managment della RaspberryPi sia disattivato:
 
 ```
 $ sudo nano /etc/rc.local
@@ -79,22 +65,78 @@ iwconfig wlan0 power off
 exit 0
 ```
 
-A questo punto la vostra RaspberryPi ag ogni riavvio si collegherà alla rete con l'ip che 
-avete scelto per lei.
+A questo punto la vostra RaspberryPi ad ogni riavvio si collegherà alla rete con l'IP che avete scelto per lei.
 
-<<<<<<< HEAD
-## 001.RPi3 LED blinking
-=======
+### WiringPi Library
+
+Per controllare dal nostro codice in C/C++ la GPIO della RaspberryPi abbiamo bisogno di aggiungere una libreria. Il sito della libreria con alcuni esempi lo trovate [qui](http://wiringpi.com/).
+
+Per installare una libreria, nel nostro caso **WiringPi** nella nostra RaspberryPi dobbiamo semplicemente eseguire le seguenti istruzioni:
+```
+$ sudo apt-get update
+$ sudo apt-cache search wiringpi
+```
+se troviamo la libreria, allora possiamo procedere con il comando seguente (altrimenti guardate [qui](#estendiamo-la-repository)):
+
+```
+$ sudo apt-get install wiringpi -y
+```
+
+Al completamento dell'installazione possiamo eseguire il tutorial [qui](#led-blinking)
+
+### Estendiamo la repository
+
+Alcune applicazioni e librerie non sono direttamente presenti sulle liste raspbian, sarà quindi necessario aggiungere le liste di ricerca wheezy. Potete farlo nel file **/etc/apt/sources.list** aggiungendo alla fine del file le due stringhe con il comando che segue:
+```
+$ sudo nano /etc/apt/sources.list
+
+deb http://archive.raspbian.org/raspbian wheezy main contrib non-free
+deb-src http://archive.raspbian.org/raspbian wheezy main contrib non-free
+```
+
+### Clona la repository
+
+Tutti i tutorial che seguono prevedono che la la repository che state visitando sia stata clonata, questo vi consente di compilare direttamente i file che si andranno ad analizzare in seguito. Potete copiarla dove volete, ma qui trovate le istruzioni che vi consiglio:
+
+```
+$ cd
+$ mkdir Repos
+$ cd Repos
+$ git clone https://github.com/TommasoPino/DIY_Domotic
+```
+
+se non avete **git** installato, potete installarlo come fatto con la libreria [WiringPi Library](#wiringpi-library)
 ## Tutorials
 
 ### LED blinking
->>>>>>> f0d8c138ab7c9bff8fb35b262184a76c12424593
 
-ho iniziato con 
+Questo tutorial consente principalmente di tutto di provare se la libreria [WiringPi](#wiringpi-library) sia stata installata correttamente.
 
+Replicato l'Hardware mostrato nella figura seguente e compilato ed eseguito il file presente nella cartella **blinkLED/blinkWiringPi.c**,
+potrete vedere il LED accendersi e spegnersi (blink) ogni mezzo secondo.
 
+```C
+#include <wiringPi.h>
+#include <stdio.h>
+int main (void)
+{
+  printf("Start program\n");
+  wiringPiSetup () ;
+  pinMode (0, OUTPUT) ;
+  while(1)
+  {
+    digitalWrite (0, HIGH) ; delay (500) ;
+    printf("Set pin at HIGH level\n");
+    digitalWrite (0,  LOW) ; delay (500) ;
+    printf("Set pin at LOW level\n");
+  }
+  return 0 ;
+}
+```
 
 ![RPiBlinkLED](https://github.com/TommasoPino/DIY_Domotic/blob/master/img/RPiBlinkLED_bb.png)
 
-![RPiBlinkLED](https://github.com/TommasoPino/DIY_Domotic/blob/master/img/RPiButtonLED_bb.png)
+### Button LED
+
+![RPiButtonLED](https://github.com/TommasoPino/DIY_Domotic/blob/master/img/RPiButtonLED_bb.png)
 
