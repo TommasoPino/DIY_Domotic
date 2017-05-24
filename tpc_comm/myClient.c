@@ -5,7 +5,7 @@ Adapted from http://www.cs.rpi.edu/~moorthy/Courses/os98/Pgms/socket.html
 The port number used in 51717.
 This code is compiled and run on the Macbook laptop as follows:
    
-    g++ -o myClient myClient.c 
+    gcc -o myClient myClient.c 
     ./myClient
 
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       printf("%d ->  %d\n",n, data );
     }
     printf( "stop server? yes/no 1/0\n");
-    c = fgets(line, sizeof(line), stdin);
+    c = (int)fgets(line, sizeof(line), stdin);
     sscanf(line, "%d", &c);
     if (c == 1)
     {
