@@ -7,6 +7,8 @@ core su una RaspberryPi 3 che monta RaspBian Lite.
 Ogni sotto cartella contiene il codice usato per un piccolo esperimento, il quale è descritto
 anche per mezzo di immagini per replicare l'hardware.
 
+[000.Rpi3 Setup WiFi](https://github.com/TommasoPino/DIY_Domotic#000rpi3-setup-wifi)
+
 ## 000.Rpi3 Setup WiFi
 
 Per prima cosa riporto di seguito le istruzioni di ciò che ho fatto per assicurarmi che la
