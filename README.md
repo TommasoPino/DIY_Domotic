@@ -7,7 +7,20 @@ core su una RaspberryPi 3 che monta RaspBian Lite.
 Ogni sotto cartella contiene il codice usato per un piccolo esperimento, il quale è descritto
 anche per mezzo di immagini per replicare l'hardware.
 
+<<<<<<< HEAD
 ## 000.Rpi3 Setup WiFi
+=======
+__RaspberryPi SETUP Index__
+
+* [Setup WiFi](https://github.com/TommasoPino/DIY_Domotic#000rpi3-setup-wifi)
+
+__Tutorials Index__
+* [LED blinking](https://github.com/TommasoPino/DIY_Domotic#000rpi3-setup-wifi)
+
+## RaspberryPi SETUP
+
+### Setup WiFi
+>>>>>>> f0d8c138ab7c9bff8fb35b262184a76c12424593
 
 Per prima cosa riporto di seguito le istruzioni di ciò che ho fatto per assicurarmi che la
 mia Rasberrina possa essere sempre raggiunta per mezzo di ssh da parte del mio Mac. (se si 
@@ -69,7 +82,13 @@ exit 0
 A questo punto la vostra RaspberryPi ag ogni riavvio si collegherà alla rete con l'ip che 
 avete scelto per lei.
 
+<<<<<<< HEAD
 ## 001.RPi3 LED blinking
+=======
+## Tutorials
+
+### LED blinking
+>>>>>>> f0d8c138ab7c9bff8fb35b262184a76c12424593
 
 ho iniziato con 
 
